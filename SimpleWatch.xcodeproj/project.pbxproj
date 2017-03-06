@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC108A241E6AACD900167A6E /* StatisticsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC108A231E6AACD900167A6E /* StatisticsTool.swift */; };
+		CC108A261E6DB4A900167A6E /* StatisticsToolTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC108A251E6DB4A900167A6E /* StatisticsToolTest.swift */; };
+		CC108A271E6DB5E400167A6E /* ConvertTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE5637C1DEC6063007D972D /* ConvertTool.swift */; };
+		CC108A281E6DB5EC00167A6E /* StatisticsTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC108A231E6AACD900167A6E /* StatisticsTool.swift */; };
 		CC4390531E49B1FF00EC40E5 /* ConvertTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE5637C1DEC6063007D972D /* ConvertTool.swift */; };
 		CC686D091E4720A4009FAED8 /* FileTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC686D081E4720A4009FAED8 /* FileTool.swift */; };
 		CCC02DE91DCB3AF100321A52 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCC02DE81DCB3AF100321A52 /* AppDelegate.swift */; };
@@ -78,6 +82,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC108A231E6AACD900167A6E /* StatisticsTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsTool.swift; sourceTree = "<group>"; };
+		CC108A251E6DB4A900167A6E /* StatisticsToolTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsToolTest.swift; sourceTree = "<group>"; };
 		CC686D081E4720A4009FAED8 /* FileTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTool.swift; sourceTree = "<group>"; };
 		CCC02DE51DCB3AF100321A52 /* SimpleWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCC02DE81DCB3AF100321A52 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -168,6 +174,7 @@
 				CCE5637A1DEC6032007D972D /* WatchData.swift */,
 				CCE5637C1DEC6063007D972D /* ConvertTool.swift */,
 				CC686D081E4720A4009FAED8 /* FileTool.swift */,
+				CC108A231E6AACD900167A6E /* StatisticsTool.swift */,
 				CCC02DEA1DCB3AF100321A52 /* ViewController.swift */,
 				CCC02DEC1DCB3AF100321A52 /* Main.storyboard */,
 				CCC02DEF1DCB3AF100321A52 /* Assets.xcassets */,
@@ -182,6 +189,7 @@
 			children = (
 				CCC02DFD1DCB3AF100321A52 /* SimpleWatchTests.swift */,
 				CCC02DFF1DCB3AF100321A52 /* Info.plist */,
+				CC108A251E6DB4A900167A6E /* StatisticsToolTest.swift */,
 			);
 			path = SimpleWatchTests;
 			sourceTree = "<group>";
@@ -422,6 +430,7 @@
 				CCE5637B1DEC6032007D972D /* WatchData.swift in Sources */,
 				CCC02DE91DCB3AF100321A52 /* AppDelegate.swift in Sources */,
 				CC686D091E4720A4009FAED8 /* FileTool.swift in Sources */,
+				CC108A241E6AACD900167A6E /* StatisticsTool.swift in Sources */,
 				CCE5637D1DEC6063007D972D /* ConvertTool.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,6 +439,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC108A281E6DB5EC00167A6E /* StatisticsTool.swift in Sources */,
+				CC108A261E6DB4A900167A6E /* StatisticsToolTest.swift in Sources */,
+				CC108A271E6DB5E400167A6E /* ConvertTool.swift in Sources */,
 				CCC02DFE1DCB3AF100321A52 /* SimpleWatchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

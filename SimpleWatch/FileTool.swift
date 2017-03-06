@@ -10,6 +10,8 @@ import Foundation
 
 public struct FileTool {
 
+    let lineSeperator = "\n"
+
     func appendToFile(data: Data, file: String) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
@@ -69,6 +71,41 @@ public struct FileTool {
             catch {/* error handling here */}
         }
         return text
+    }
+    
+    func readFromFile(file: String, lastRows: Int) -> String {
+        var result = ""
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(file)
+            
+            if let fileHandle = FileHandle(forReadingAtPath: url.path) {
+                defer {
+                    fileHandle.closeFile()
+                }
+                var data: Data
+                var readText: String
+                var textArray: [String]
+                
+                let end = fileHandle.seekToEndOfFile()
+                fileHandle.seek(toFileOffset: end - 100)
+                data = fileHandle.readDataToEndOfFile()
+                readText = String(data: data, encoding: .utf8)!
+                textArray = readText.components(separatedBy: lineSeperator)
+                textArray.removeLast()
+                let lineLength = textArray.last!.characters.count
+                
+                fileHandle.seek(toFileOffset: end - UInt64((lineLength + 5) * lastRows))
+                data = fileHandle.readDataToEndOfFile()
+                readText = String(data: data, encoding: .utf8)!
+                textArray = readText.components(separatedBy: lineSeperator)
+                textArray.removeLast()
+                while textArray.count > lastRows {
+                    textArray.removeFirst()
+                }
+                result = textArray.joined(separator: lineSeperator)
+            }
+        }
+        return result
     }
 
     func readFromFile() -> String {

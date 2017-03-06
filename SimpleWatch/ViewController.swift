@@ -42,6 +42,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var locAlti1: UILabel!
     @IBOutlet weak var locAlti2: UILabel!
     @IBOutlet weak var locAlti3: UILabel!
+    @IBOutlet weak var testAcceleration: UILabel!
 
     let manager = CMMotionManager()
     var session: WCSession?
@@ -134,6 +135,12 @@ class ViewController: UIViewController {
             self.updateAccelerationLabels(watchData.accelerations)
             self.updateRotationRateLabels(watchData.rotationRates)
             self.updateLocationLabels(watchData.locations)
+
+            let formatter = DateFormatter()
+            formatter.dateFormat = "yyyyMMdd"
+            let dateStr = formatter.string(from: Date())
+            let lastRows = self.fileTool.readFromFile(file: dateStr + "_acceleration.txt", lastRows: 2)
+            self.testAcceleration.text = lastRows
         })
     }
 
@@ -156,17 +163,7 @@ extension ViewController: WCSessionDelegate {
         let watchData = WatchData(message)
 //        NSLog("\(watchData)")
         updateLabels(watchData)
-//        count += 1
         watchData.appendToFile()
-//        fileTool.appendTextToFile("\(count)\n")
-//        let fileText = fileTool.readFromFile()
-//        NSLog(fileText)
-//        let acceText = fileTool.readFromFile("20170208_acceleration.txt")
-//        print(acceText)
-//        let rotationText = fileTool.readFromFile("20170208_rotationRate.txt")
-//        print(rotationText)
-//        let locationText = fileTool.readFromFile("20170208_location.txt")
-//        print(locationText)
     }
     
     func session(_ session: WCSession, didReceiveApplicationContext applicationContext: [String : Any]) {

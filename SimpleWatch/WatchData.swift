@@ -16,6 +16,7 @@ public struct WatchData {
     public var locations = [NSDate : CLLocation]()
 
     let convertTool = ConvertTool()
+    let fileTool = FileTool()
     public init() {}
     public init(_ data: [String : Any]) {
         if data["acceleration"] != nil {
@@ -31,7 +32,7 @@ public struct WatchData {
 
     private func appendToFile(_ dictArray: [NSDate : Dictionary<String, Double>], fileSuffix: String) {
         var data = Data()
-        let returnData = "\n".data(using: .utf8)!
+        let returnData = fileTool.lineSeperator.data(using: .utf8)!
         var dateStr = "", timeStr = ""
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMddHHmmssSSS"
@@ -51,7 +52,7 @@ public struct WatchData {
             }
         }
         if dateStr != "" {
-            FileTool().appendToFile(data: data, file: dateStr + fileSuffix)
+            fileTool.appendToFile(data: data, file: dateStr + fileSuffix)
         }
     }
 
