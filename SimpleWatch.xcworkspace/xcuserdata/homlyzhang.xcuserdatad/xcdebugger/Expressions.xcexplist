@@ -3,6 +3,22 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "StatisticsTool.distance([CLLocation]) -&gt; Double:StatisticsTool.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "secLoc[i]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "StatisticsTool.getSecondLocations([CLLocation]) -&gt; [CLLocation]:StatisticsTool.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "curLoc.timestamp">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ViewController.updateLabels(WatchData) -&gt; ():ViewController.swift">
          <PersistentStrings>
             <PersistentString

@@ -19,13 +19,13 @@ public struct StatisticsTool {
             secondLocations.append(oriLocations[0])
         }
         if oriLocations.count > 1 {
-            var lastIndex = -1
-            var lastSecInterval = Int(oriLocations[0].timestamp.timeIntervalSince1970)
+            var startIndex = 0
+            var curSecInterval = Int(oriLocations[0].timestamp.timeIntervalSince1970)
             var sumDict = convertTool.locationToDict(oriLocations[0])
             sumDict["interval"] = oriLocations[0].timestamp.timeIntervalSince1970
             for i in 1...oriLocations.count {
-                if i == oriLocations.count || lastSecInterval != Int(oriLocations[i].timestamp.timeIntervalSince1970) {
-                    let times = Double(i - lastIndex)
+                if i == oriLocations.count || curSecInterval != Int(oriLocations[i].timestamp.timeIntervalSince1970) {
+                    let times = Double(i - startIndex)
                     sumDict["latitude"] = sumDict["latitude"]! / times
                     sumDict["longitude"] = sumDict["longitude"]! / times
                     sumDict["altitude"] = sumDict["altitude"]! / times
@@ -35,14 +35,12 @@ public struct StatisticsTool {
                     secondLocations.append(tempLocation)
                     if i < oriLocations.count {
                         let curLoc = oriLocations[i]
-                        lastIndex = i
-                        lastSecInterval = Int(curLoc.timestamp.timeIntervalSince1970)
+                        startIndex = i
+                        curSecInterval = Int(curLoc.timestamp.timeIntervalSince1970)
                         sumDict = convertTool.locationToDict(curLoc)
                         sumDict["interval"] = curLoc.timestamp.timeIntervalSince1970
                     }
-                }
-
-                if i < oriLocations.count {
+                } else if i < oriLocations.count {
                     let curLoc = oriLocations[i]
                     sumDict["latitude"] = sumDict["latitude"]! + curLoc.coordinate.latitude
                     sumDict["longitude"] = sumDict["longitude"]! + curLoc.coordinate.longitude
@@ -56,7 +54,10 @@ public struct StatisticsTool {
 
     func distance(_ locations: [CLLocation]) -> Double {
         var d = 0.0
-        
+        let secLoc = getSecondLocations(locations)
+        for i in 0...secLoc.count - 2 {
+            d = d + secLoc[i + 1].distance(from: secLoc[i])
+        }
         return d
     }
 }
