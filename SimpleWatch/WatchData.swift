@@ -15,25 +15,22 @@ public struct WatchData {
     public var rotationRates = [NSDate : CMRotationRate]()
     public var locations = [NSDate : CLLocation]()
 
-    private let convertTool = ConvertTool()
-    private let fileTool = FileTool()
-
     public init() {}
     public init(_ data: [String : Any]) {
         if data["acceleration"] != nil {
-            self.accelerations = convertTool.dictArrayToAccelerationArray(data["acceleration"] as! [NSDate: Dictionary<String, Double>])
+            self.accelerations = ConvertTool.dictArrayToAccelerationArray(data["acceleration"] as! [NSDate: Dictionary<String, Double>])
         }
         if data["rotationRate"] != nil {
-            self.rotationRates = convertTool.dictArrayToRotationRateArray(data["rotationRate"] as! [NSDate: Dictionary<String, Double>])
+            self.rotationRates = ConvertTool.dictArrayToRotationRateArray(data["rotationRate"] as! [NSDate: Dictionary<String, Double>])
         }
         if data["location"] != nil {
-            self.locations = convertTool.dictArrayToLocationArray(data["location"] as! [NSDate: Dictionary<String, Double>])
+            self.locations = ConvertTool.dictArrayToLocationArray(data["location"] as! [NSDate: Dictionary<String, Double>])
         }
     }
 
     private func appendToFile(_ dictArray: [NSDate : Dictionary<String, Double>], fileSuffix: String) {
         var data = Data()
-        let returnData = fileTool.lineSeperator.data(using: .utf8)!
+        let returnData = FileTool.lineSeperator.data(using: .utf8)!
         var dateStr = "", timeStr = ""
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyyMMddHHmmssSSS"
@@ -56,12 +53,12 @@ public struct WatchData {
             }
         }
         if dateStr != "" {
-            fileTool.appendToFile(data: data, file: dateStr + fileSuffix)
+            FileTool.appendToFile(data: data, file: dateStr + fileSuffix)
         }
     }
 
     func appendToFile() {
-        let message = convertTool.makeSendMessage(accelerations: self.accelerations, rotationRates: self.rotationRates, locations: self.locations)
+        let message = ConvertTool.makeSendMessage(accelerations: self.accelerations, rotationRates: self.rotationRates, locations: self.locations)
         for property in ["acceleration", "rotationRate", "location"] {
             appendToFile(message[property] as! [NSDate : Dictionary<String, Double>], fileSuffix: "_" + property + ".txt")
         }
@@ -73,28 +70,30 @@ public struct WatchData {
         let dateStr = dateFormatter.string(from: date)
         var lastRows: String
         if num >= 0 {
-            lastRows = self.fileTool.readFromFile(file: dateStr + "_location.txt", lastRows: num)
+            lastRows = FileTool.readFromFile(file: dateStr + "_location.txt", lastRows: num)
         } else {
-            lastRows = self.fileTool.readFromFile(dateStr + "_location.txt")
+            lastRows = FileTool.readFromFile(dateStr + "_location.txt")
         }
-        var jsonStrArray = lastRows.components(separatedBy: fileTool.lineSeperator)
+        var jsonStrArray = lastRows.components(separatedBy: FileTool.lineSeperator)
         let fullFormatter = DateFormatter()
         fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
 
         var result = [CLLocation]()
         for i in 0...jsonStrArray.count - 1 {
             let jsonStr = jsonStrArray[i]
-            do {
-                let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
-                let dict = json as! Dictionary<String, Dictionary<String, Double>>
-                for timeStr in dict.keys.sorted() {
-                    let dictIn = dict[timeStr]!
-                    let timestamp = fullFormatter.date(from: "\(dateStr)\(timeStr)")
-                    let location = convertTool.dictToLocation(dictIn, timestamp: timestamp! as NSDate)
-                    result.append(location)
+            if jsonStr.characters.count > 0 {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
+                    let dict = json as! Dictionary<String, Dictionary<String, Double>>
+                    for timeStr in dict.keys.sorted() {
+                        let dictIn = dict[timeStr]!
+                        let timestamp = fullFormatter.date(from: "\(dateStr)\(timeStr)")
+                        let location = ConvertTool.dictToLocation(dictIn, timestamp: timestamp! as NSDate)
+                        result.append(location)
+                    }
+                } catch {
+                    LogTool.log(error, #file, #function, #line)
                 }
-            } catch {
-                NSLog(error.localizedDescription)
             }
         }
         return result

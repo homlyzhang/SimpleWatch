@@ -12,6 +12,10 @@ import CoreLocation
 import WatchConnectivity
 
 class ViewController: UIViewController {
+    
+    let manager = CMMotionManager()
+    var session: WCSession?
+    var count = 0
 
     // MARK: properties
 
@@ -36,12 +40,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var locTime: UILabel!
     @IBOutlet weak var locDistance: UILabel!
 
-    let manager = CMMotionManager()
-    var session: WCSession?
-    let convertTool = ConvertTool()
-    let fileTool = FileTool()
-    let statisticsTool = StatisticsTool()
-    var count = 0
+    // MARK: actions
+
+    @IBAction func locResetAct(_ sender: UIButton) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let dateStr = dateFormatter.string(from: Date())
+        FileTool.deleteFile("\(dateStr)_location.txt")
+    }
 
     override func viewDidLoad() {
         NSLog("viewDidLoad")
@@ -102,7 +108,7 @@ class ViewController: UIViewController {
     func updateLocationLabels() {
         let latestLocations = WatchData().getLatestLocations(date: Date(), num: -1)
         if latestLocations.count > 0 {
-            let distance = statisticsTool.distance(latestLocations)
+            let distance = StatisticsTool.distance(latestLocations)
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             locTime.text = timeFormatter.string(from: latestLocations.last!.timestamp)

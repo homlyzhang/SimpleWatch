@@ -8,11 +8,11 @@
 
 import Foundation
 
-public struct FileTool {
+class FileTool {
 
-    let lineSeperator = "\n"
+    static let lineSeperator = "\n"
 
-    func appendToFile(data: Data, file: String) {
+    static func appendToFile(data: Data, file: String) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             //writing
@@ -32,11 +32,11 @@ public struct FileTool {
         }
     }
 
-    func appendToFile(data: Data) {
+    static func appendToFile(data: Data) {
         appendToFile(data: data, file: "file.txt")
     }
 
-    func appendTextToFile(text: String, file: String) {
+    static func appendTextToFile(text: String, file: String) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             //writing
@@ -56,11 +56,11 @@ public struct FileTool {
         }
     }
 
-    func appendTextToFile(_ text: String) {
+    static func appendTextToFile(_ text: String) {
         appendTextToFile(text: text, file: "file.txt")
     }
 
-    func readFromFile(_ file: String) -> String {
+    static func readFromFile(_ file: String) -> String {
         var text = ""
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let path = dir.appendingPathComponent(file)
@@ -73,7 +73,7 @@ public struct FileTool {
         return text
     }
     
-    func readFromFile(file: String, lastRows: Int) -> String {
+    static func readFromFile(file: String, lastRows: Int) -> String {
         var result = ""
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
@@ -108,12 +108,19 @@ public struct FileTool {
         return result
     }
 
-    func readFromFile() -> String {
+    static func readFromFile() -> String {
         return readFromFile("file.txt")
     }
 
-    func deleteAllFiles() {
-        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+    static func deleteFile(_ file: String) {
+        let fileManager = FileManager.default
+        if let dir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(file)
+            do {
+                try fileManager.removeItem(at: url)
+            } catch {
+                NSLog(error.localizedDescription)
+            }
         }
     }
 }

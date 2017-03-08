@@ -11,9 +11,7 @@ import CoreLocation
 
 class StatisticsToolTest: XCTestCase {
 
-    let staTool = StatisticsTool()
     let msFormatter = DateFormatter()
-    let cvtTool = ConvertTool()
 
     override func setUp() {
         super.setUp()
@@ -33,23 +31,23 @@ class StatisticsToolTest: XCTestCase {
 */
     func testGetSecondLocations() {
         var locations = [CLLocation]()
-        locations.append(cvtTool.dictToLocation(["latitude": 0.001, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.456")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.002, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.532")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.004, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.865")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.001, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.456")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.002, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.532")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.004, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.865")! as NSDate))
 
-        locations.append(cvtTool.dictToLocation(["latitude": 0.008, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.426")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.008, "longitude": 0.005, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.756")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.008, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.426")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.008, "longitude": 0.005, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.756")! as NSDate))
         
-        locations.append(cvtTool.dictToLocation(["latitude": 0.008, "longitude": 0.009, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.156")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.476")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.496")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.008, "longitude": 0.009, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.156")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.476")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:18.496")! as NSDate))
         
-        locations.append(cvtTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:19.480")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:19.480")! as NSDate))
         
-        locations.append(cvtTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:21.304")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 31.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:21.456")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 19.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:21.304")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.009, "longitude": 0.011, "altitude": 31.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:21.456")! as NSDate))
 
-        let secLocations = staTool.getSecondLocations(locations)
+        let secLocations = StatisticsTool.getSecondLocations(locations)
         XCTAssert(secLocations.count == 5)
         XCTAssert(strcmp(msFormatter.string(from: secLocations[0].timestamp), "2017-03-06 23:26:13.618") == 0)
         XCTAssert(strcmp(msFormatter.string(from: secLocations[1].timestamp), "2017-03-06 23:26:14.591") == 0)
@@ -62,10 +60,10 @@ class StatisticsToolTest: XCTestCase {
 
     func testDistance() {
         var locations = [CLLocation]()
-        locations.append(cvtTool.dictToLocation(["latitude": 0.001, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.456")! as NSDate))
-        locations.append(cvtTool.dictToLocation(["latitude": 0.002, "longitude": 0.004, "altitude": 70.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.456")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.001, "longitude": 0.003, "altitude": 7.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:13.456")! as NSDate))
+        locations.append(ConvertTool.dictToLocation(["latitude": 0.002, "longitude": 0.004, "altitude": 70.00], timestamp: msFormatter.date(from: "2017-03-06 23:26:14.456")! as NSDate))
 
-        let d = staTool.distance(locations)
+        let d = StatisticsTool.distance(locations)
         print("\n\(d)\n")
         XCTAssert(abs(d - 163.8) < 10)
     }

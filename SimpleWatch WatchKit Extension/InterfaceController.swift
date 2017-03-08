@@ -23,7 +23,6 @@ class InterfaceController: WKInterfaceController {
     var rotationRateData = [NSDate : CMRotationRate]()
     var locationData = [NSDate : CLLocation]()
     var deviceMotionData = [NSDate : CMDeviceMotion]()
-    let convertTool = ConvertTool()
     let COLLECT_FREQUENCY = 10.0
     let SEND_FREQUNCY = 0.5
     var count = 0.000
@@ -99,11 +98,11 @@ class InterfaceController: WKInterfaceController {
         let data: [String : Any]?
 
         if deviceMotionData.count >= collectThreshold || locationData.count >= collectThreshold {
-            data = convertTool.makeSendMessage(deviceMotions: deviceMotionData, locations: locationData)
+            data = ConvertTool.makeSendMessage(deviceMotions: deviceMotionData, locations: locationData)
             deviceMotionData.removeAll()
             locationData.removeAll()
         } else if accelerationData.count >= collectThreshold || rotationRateData.count >= collectThreshold || locationData.count >= collectThreshold {
-            data = convertTool.makeSendMessage(accelerations: accelerationData, rotationRates: rotationRateData, locations: locationData)
+            data = ConvertTool.makeSendMessage(accelerations: accelerationData, rotationRates: rotationRateData, locations: locationData)
             accelerationData.removeAll()
             rotationRateData.removeAll()
             locationData.removeAll()

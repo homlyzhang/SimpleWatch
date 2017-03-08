@@ -9,11 +9,9 @@
 import Foundation
 import CoreLocation
 
-public struct StatisticsTool {
+class StatisticsTool {
 
-    let convertTool = ConvertTool()
-
-    func getSecondLocations(_ oriLocations: [CLLocation]) -> [CLLocation] {
+    static func getSecondLocations(_ oriLocations: [CLLocation]) -> [CLLocation] {
         var secondLocations = [CLLocation]()
         if oriLocations.count == 1 {
             secondLocations.append(oriLocations[0])
@@ -21,7 +19,7 @@ public struct StatisticsTool {
         if oriLocations.count > 1 {
             var startIndex = 0
             var curSecInterval = Int(oriLocations[0].timestamp.timeIntervalSince1970)
-            var sumDict = convertTool.locationToDict(oriLocations[0])
+            var sumDict = ConvertTool.locationToDict(oriLocations[0])
             sumDict["interval"] = oriLocations[0].timestamp.timeIntervalSince1970
             for i in 1...oriLocations.count {
                 if i == oriLocations.count || curSecInterval != Int(oriLocations[i].timestamp.timeIntervalSince1970) {
@@ -31,13 +29,13 @@ public struct StatisticsTool {
                     sumDict["altitude"] = sumDict["altitude"]! / times
                     sumDict["interval"] = sumDict["interval"]! / times
                     let tempNSDate = NSDate(timeIntervalSince1970: sumDict["interval"]!)
-                    let tempLocation = convertTool.dictToLocation(sumDict, timestamp: tempNSDate)
+                    let tempLocation = ConvertTool.dictToLocation(sumDict, timestamp: tempNSDate)
                     secondLocations.append(tempLocation)
                     if i < oriLocations.count {
                         let curLoc = oriLocations[i]
                         startIndex = i
                         curSecInterval = Int(curLoc.timestamp.timeIntervalSince1970)
-                        sumDict = convertTool.locationToDict(curLoc)
+                        sumDict = ConvertTool.locationToDict(curLoc)
                         sumDict["interval"] = curLoc.timestamp.timeIntervalSince1970
                     }
                 } else if i < oriLocations.count {
@@ -52,7 +50,7 @@ public struct StatisticsTool {
         return secondLocations
     }
 
-    func distance(_ locations: [CLLocation]) -> Double {
+    static func distance(_ locations: [CLLocation]) -> Double {
         var d = 0.0
         let secLoc = getSecondLocations(locations)
         for i in 0...secLoc.count - 2 {
