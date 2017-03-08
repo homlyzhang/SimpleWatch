@@ -111,4 +111,9 @@ public struct FileTool {
     func readFromFile() -> String {
         return readFromFile("file.txt")
     }
+
+    func deleteAllFiles() {
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+        }
+    }
 }

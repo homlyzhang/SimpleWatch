@@ -33,21 +33,14 @@ class ViewController: UIViewController {
     @IBOutlet weak var roRateZ1: UILabel!
     @IBOutlet weak var roRateZ2: UILabel!
     @IBOutlet weak var roRateZ3: UILabel!
-    @IBOutlet weak var locLongi1: UILabel!
-    @IBOutlet weak var locLongi2: UILabel!
-    @IBOutlet weak var locLongi3: UILabel!
-    @IBOutlet weak var locLati1: UILabel!
-    @IBOutlet weak var locLati2: UILabel!
-    @IBOutlet weak var locLati3: UILabel!
-    @IBOutlet weak var locAlti1: UILabel!
-    @IBOutlet weak var locAlti2: UILabel!
-    @IBOutlet weak var locAlti3: UILabel!
-    @IBOutlet weak var testAcceleration: UILabel!
+    @IBOutlet weak var locTime: UILabel!
+    @IBOutlet weak var locDistance: UILabel!
 
     let manager = CMMotionManager()
     var session: WCSession?
     let convertTool = ConvertTool()
     let fileTool = FileTool()
+    let statisticsTool = StatisticsTool()
     var count = 0
 
     override func viewDidLoad() {
@@ -105,42 +98,27 @@ class ViewController: UIViewController {
         self.roRateZ2.text = self.roRateZ1.text!
         self.roRateZ1.text = roRate.z.format(".3")
     }
-    
-    func updateLocationLabels(_ locations: [NSDate : CLLocation]) {
-        var longitude = 0.0
-        var latitude = 0.0
-        var altitude = 0.0
-        let count = Double(locations.count)
-        for (_, a) in locations {
-            longitude += a.coordinate.longitude
-            latitude += a.coordinate.latitude
-            altitude += a.altitude
+
+    func updateLocationLabels() {
+        let latestLocations = WatchData().getLatestLocations(date: Date(), num: -1)
+        if latestLocations.count > 0 {
+            let distance = statisticsTool.distance(latestLocations)
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            locTime.text = timeFormatter.string(from: latestLocations.last!.timestamp)
+            if distance < 10000 {
+                locDistance.text = "\((distance * 1000).rounded() / 1000) m"
+            } else {
+                locDistance.text = "\(distance.rounded() / 1000) km"
+            }
         }
-        longitude /= count
-        latitude /= count
-        altitude /= count
-        self.locLongi3.text = self.locLongi2.text!
-        self.locLongi2.text = self.locLongi1.text!
-        self.locLongi1.text = longitude.format(".3")
-        self.locLati3.text = self.locLati2.text!
-        self.locLati2.text = self.locLati1.text!
-        self.locLati1.text = latitude.format(".3")
-        self.locAlti3.text = self.locAlti2.text!
-        self.locAlti2.text = self.locAlti1.text!
-        self.locAlti1.text = altitude.format(".3")
     }
 
     func updateLabels(_ watchData: WatchData) {
         DispatchQueue.main.async(execute: {
             self.updateAccelerationLabels(watchData.accelerations)
             self.updateRotationRateLabels(watchData.rotationRates)
-            self.updateLocationLabels(watchData.locations)
-
-            let formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd"
-            let dateStr = formatter.string(from: Date())
-            let lastRows = self.fileTool.readFromFile(file: dateStr + "_acceleration.txt", lastRows: 2)
-            self.testAcceleration.text = lastRows
+            self.updateLocationLabels()
         })
     }
 

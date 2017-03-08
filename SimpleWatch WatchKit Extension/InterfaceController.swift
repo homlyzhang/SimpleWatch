@@ -184,7 +184,7 @@ class InterfaceController: WKInterfaceController {
 
     func updateLocation() {
         // for simulator - start
-//        count += 0.001
+//        count += 0.00001
 //        locationData[NSDate()] = CLLocation(latitude: count, longitude: count)
 //        sendData()
         // for simulator - end
