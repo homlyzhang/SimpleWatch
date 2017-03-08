@@ -173,16 +173,16 @@
 			isa = PBXGroup;
 			children = (
 				CCC02DE81DCB3AF100321A52 /* AppDelegate.swift */,
-				CCE5637A1DEC6032007D972D /* WatchData.swift */,
-				CCE5637C1DEC6063007D972D /* ConvertTool.swift */,
-				CC686D081E4720A4009FAED8 /* FileTool.swift */,
-				CC108A231E6AACD900167A6E /* StatisticsTool.swift */,
 				CCC02DEA1DCB3AF100321A52 /* ViewController.swift */,
 				CCC02DEC1DCB3AF100321A52 /* Main.storyboard */,
 				CCC02DEF1DCB3AF100321A52 /* Assets.xcassets */,
 				CCC02DF11DCB3AF100321A52 /* LaunchScreen.storyboard */,
 				CCC02DF41DCB3AF100321A52 /* Info.plist */,
+				CCE5637A1DEC6032007D972D /* WatchData.swift */,
+				CCE5637C1DEC6063007D972D /* ConvertTool.swift */,
+				CC686D081E4720A4009FAED8 /* FileTool.swift */,
 				CC06A3CC1E6FFC65009B31C2 /* LogTool.swift */,
+				CC108A231E6AACD900167A6E /* StatisticsTool.swift */,
 			);
 			path = SimpleWatch;
 			sourceTree = "<group>";

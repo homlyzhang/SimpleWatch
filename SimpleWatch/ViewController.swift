@@ -111,11 +111,11 @@ class ViewController: UIViewController {
             let distance = StatisticsTool.distance(latestLocations)
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            locTime.text = timeFormatter.string(from: latestLocations.last!.timestamp)
+            self.locTime.text = timeFormatter.string(from: latestLocations.last!.timestamp)
             if distance < 10000 {
-                locDistance.text = "\((distance * 1000).rounded() / 1000) m"
+                self.locDistance.text = "\((distance * 1000).rounded() / 1000) m"
             } else {
-                locDistance.text = "\(distance.rounded() / 1000) km"
+                self.locDistance.text = "\(distance.rounded() / 1000) km"
             }
         }
     }
