@@ -12,7 +12,7 @@ class FileTool {
 
     static let lineSeperator = "\n"
 
-    static func appendToFile(data: Data, file: String) {
+    static func append(data: Data, to file: String) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             //writing
@@ -32,11 +32,11 @@ class FileTool {
         }
     }
 
-    static func appendToFile(data: Data) {
-        appendToFile(data: data, file: "file.txt")
+    static func append(data: Data) {
+        append(data: data, to: "file.txt")
     }
 
-    static func appendTextToFile(text: String, file: String) {
+    static func appendText(text: String, to file: String) {
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             //writing
@@ -56,11 +56,11 @@ class FileTool {
         }
     }
 
-    static func appendTextToFile(_ text: String) {
-        appendTextToFile(text: text, file: "file.txt")
+    static func appendText(_ text: String) {
+        appendText(text: text, to: "file.txt")
     }
 
-    static func readFromFile(_ file: String) -> String {
+    static func read(_ file: String) -> String {
         var text = ""
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let path = dir.appendingPathComponent(file)
@@ -72,8 +72,8 @@ class FileTool {
         }
         return text
     }
-    
-    static func readFromFile(file: String, lastRows: Int) -> String {
+
+    static func read(from file: String, lastRows: Int) -> String {
         var result = ""
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
@@ -85,20 +85,34 @@ class FileTool {
                 var data: Data
                 var readText: String
                 var textArray: [String]
-                
+
+                var offset: UInt64
                 let end = fileHandle.seekToEndOfFile()
-                fileHandle.seek(toFileOffset: end - 100)
-                data = fileHandle.readDataToEndOfFile()
-                readText = String(data: data, encoding: .utf8)!
-                textArray = readText.components(separatedBy: lineSeperator)
-                textArray.removeLast()
+                var tryLineLength = UInt64(100)
+                repeat {
+                    offset = UInt64(0)
+                    if end >= tryLineLength {
+                        offset = end - tryLineLength
+                    }
+                    fileHandle.seek(toFileOffset: offset)
+                    data = fileHandle.readDataToEndOfFile()
+                    readText = String(data: data, encoding: .utf8)!
+                    textArray = readText.components(separatedBy: lineSeperator)
+                    if textArray.last! == "" {
+                        textArray.removeLast()
+                    }
+                    tryLineLength = tryLineLength * 2
+                } while (textArray.count < lastRows + 1 && offset > 0)
                 let lineLength = textArray.last!.characters.count
                 
-                fileHandle.seek(toFileOffset: end - UInt64((lineLength + 5) * lastRows))
+                offset = UInt64(0)
+                if end >= UInt64((lineLength + 5) * lastRows) {
+                    offset = end - UInt64((lineLength + 5) * lastRows)
+                }
+                fileHandle.seek(toFileOffset: offset)
                 data = fileHandle.readDataToEndOfFile()
                 readText = String(data: data, encoding: .utf8)!
                 textArray = readText.components(separatedBy: lineSeperator)
-                textArray.removeLast()
                 while textArray.count > lastRows {
                     textArray.removeFirst()
                 }
@@ -108,11 +122,59 @@ class FileTool {
         return result
     }
 
-    static func readFromFile() -> String {
-        return readFromFile("file.txt")
+    static func read(from file: String, beginWith offset: UInt64) -> String {
+        var result = ""
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(file)
+            
+            if let fileHandle = FileHandle(forReadingAtPath: url.path) {
+                defer {
+                    fileHandle.closeFile()
+                }
+                var data: Data
+
+                fileHandle.seek(toFileOffset: offset)
+                data = fileHandle.readDataToEndOfFile()
+                result = String(data: data, encoding: .utf8)!
+            }
+        }
+        return result
+    }
+    
+    static func readLine(from file: String, beginWith offset: UInt64) -> String {
+        var result = ""
+        if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let url = dir.appendingPathComponent(file)
+            
+            if let fileHandle = FileHandle(forReadingAtPath: url.path) {
+                defer {
+                    fileHandle.closeFile()
+                }
+                var data: Data
+                var readText: String
+                var textArray: [String]
+
+                let end = fileHandle.seekToEndOfFile()
+                var tryLineLength = 50
+                repeat {
+                    fileHandle.seek(toFileOffset: offset)
+                    tryLineLength = tryLineLength * 2
+                    data = fileHandle.readData(ofLength: tryLineLength)
+                    readText = String(data: data, encoding: .utf8)!
+                    textArray = readText.components(separatedBy: lineSeperator)
+                } while (textArray.count < 2 && offset + UInt64(tryLineLength) < end)
+                
+                result = String(data: data, encoding: .utf8)!
+            }
+        }
+        return result
     }
 
-    static func deleteFile(_ file: String) {
+    static func read() -> String {
+        return read("file.txt")
+    }
+
+    static func delete(_ file: String) {
         let fileManager = FileManager.default
         if let dir = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)

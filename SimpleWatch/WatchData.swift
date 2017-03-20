@@ -53,7 +53,7 @@ class WatchData {
             }
         }
         if dateStr != "" {
-            FileTool.appendToFile(data: data, file: dateStr + fileSuffix)
+            FileTool.append(data: data, to: dateStr + fileSuffix)
         }
     }
 
@@ -70,9 +70,9 @@ class WatchData {
         let dateStr = dateFormatter.string(from: date)
         var lastRows: String
         if num >= 0 {
-            lastRows = FileTool.readFromFile(file: dateStr + "_location.txt", lastRows: num)
+            lastRows = FileTool.read(from: dateStr + "_location.txt", lastRows: num)
         } else {
-            lastRows = FileTool.readFromFile(dateStr + "_location.txt")
+            lastRows = FileTool.read(dateStr + "_location.txt")
         }
         var jsonStrArray = lastRows.components(separatedBy: FileTool.lineSeperator)
         let fullFormatter = DateFormatter()

@@ -46,7 +46,7 @@ class ViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         let dateStr = dateFormatter.string(from: Date())
-        FileTool.deleteFile("\(dateStr)_location.txt")
+        FileTool.delete("\(dateStr)_location.txt")
     }
 
     override func viewDidLoad() {

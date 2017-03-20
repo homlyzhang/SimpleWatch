@@ -31,6 +31,8 @@
 		CCC02E211DCB3AF100321A52 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CCC02E201DCB3AF100321A52 /* Assets.xcassets */; };
 		CCE5637B1DEC6032007D972D /* WatchData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE5637A1DEC6032007D972D /* WatchData.swift */; };
 		CCE5637D1DEC6063007D972D /* ConvertTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE5637C1DEC6063007D972D /* ConvertTool.swift */; };
+		CCE717741E7FCE5700319642 /* FileToolTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE717731E7FCE5700319642 /* FileToolTest.swift */; };
+		CCE717751E7FCEDD00319642 /* FileTool.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC686D081E4720A4009FAED8 /* FileTool.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +114,7 @@
 		CCE563581DEC4F68007D972D /* WatchDataKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "WatchDataKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CCE5637A1DEC6032007D972D /* WatchData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchData.swift; sourceTree = "<group>"; };
 		CCE5637C1DEC6063007D972D /* ConvertTool.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertTool.swift; sourceTree = "<group>"; };
+		CCE717731E7FCE5700319642 /* FileToolTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileToolTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +196,7 @@
 				CCC02DFD1DCB3AF100321A52 /* SimpleWatchTests.swift */,
 				CCC02DFF1DCB3AF100321A52 /* Info.plist */,
 				CC108A251E6DB4A900167A6E /* StatisticsToolTest.swift */,
+				CCE717731E7FCE5700319642 /* FileToolTest.swift */,
 			);
 			path = SimpleWatchTests;
 			sourceTree = "<group>";
@@ -444,9 +448,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC108A281E6DB5EC00167A6E /* StatisticsTool.swift in Sources */,
+				CCE717751E7FCEDD00319642 /* FileTool.swift in Sources */,
 				CC108A261E6DB4A900167A6E /* StatisticsToolTest.swift in Sources */,
 				CC108A271E6DB5E400167A6E /* ConvertTool.swift in Sources */,
 				CCC02DFE1DCB3AF100321A52 /* SimpleWatchTests.swift in Sources */,
+				CCE717741E7FCE5700319642 /* FileToolTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
