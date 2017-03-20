@@ -10,10 +10,10 @@ import Foundation
 import CoreMotion
 import CoreLocation
 
-public struct WatchData {
-    public var accelerations = [NSDate : CMAcceleration]()
-    public var rotationRates = [NSDate : CMRotationRate]()
-    public var locations = [NSDate : CLLocation]()
+class WatchData {
+    var accelerations = [NSDate : CMAcceleration]()
+    var rotationRates = [NSDate : CMRotationRate]()
+    var locations = [NSDate : CLLocation]()
 
     public init() {}
     public init(_ data: [String : Any]) {
@@ -64,7 +64,7 @@ public struct WatchData {
         }
     }
 
-    func getLatestLocations(date: Date, num: Int) -> [CLLocation] {
+    static func getLatestLocations(date: Date, num: Int) -> [CLLocation] {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         let dateStr = dateFormatter.string(from: date)

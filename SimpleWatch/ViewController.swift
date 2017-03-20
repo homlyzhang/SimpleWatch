@@ -106,7 +106,7 @@ class ViewController: UIViewController {
     }
 
     func updateLocationLabels() {
-        let latestLocations = WatchData().getLatestLocations(date: Date(), num: -1)
+        let latestLocations = WatchData.getLatestLocations(date: Date(), num: -1)
         if latestLocations.count > 0 {
             let distance = StatisticsTool.distance(latestLocations)
             let timeFormatter = DateFormatter()

@@ -11,6 +11,8 @@ import CoreLocation
 
 class StatisticsTool {
 
+//    private distanceCache =
+
     static func getSecondLocations(_ oriLocations: [CLLocation]) -> [CLLocation] {
         var secondLocations = [CLLocation]()
         if oriLocations.count == 1 {
@@ -58,4 +60,9 @@ class StatisticsTool {
         }
         return d
     }
+//
+//    static func distance(_ date: Date) -> Double {
+//        var d = 0.0
+//        return
+//    }
 }
