@@ -12,13 +12,11 @@ class FileToolTest: XCTestCase {
 
     let fileName = "unit_test.txt"
     let ls = FileTool.lineSeperator
+    let data = ["aaaa", "bbba", "aacc", "bbaa", "bbac", "aavv"].joined(separator: FileTool.lineSeperator).data(using: .utf8)!
 
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        let sArray = ["aaaa", "bbba", "aacc", "bbaa", "bbac", "aavv"]
-        let s = sArray.joined(separator: FileTool.lineSeperator)
-        let data = s.data(using: .utf8)!
         FileTool.delete(fileName)
         FileTool.append(data: data, to: fileName)
     }
@@ -71,9 +69,10 @@ class FileToolTest: XCTestCase {
         (getString, end) = FileTool.readTextAndEnd(from: fileName, beginWith: 10)
         XCTAssert(getString == "aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
         XCTAssert(end == 29)
-        (getString, end) = FileTool.readTextAndEnd(from: fileName, beginWith: 15)
-        XCTAssert(getString == "bbaa\(ls)bbac\(ls)aavv")
-        XCTAssert(end == 29)
+        FileTool.append(data: data, to: fileName)
+        (getString, end) = FileTool.readTextAndEnd(from: fileName, beginWith: end)
+        XCTAssert(getString == "aaaa\(ls)bbba\(ls)aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
+        XCTAssert(end == 58)
     }
 
     func testReadLineFromOffset() {
