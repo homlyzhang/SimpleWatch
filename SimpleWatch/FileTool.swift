@@ -73,8 +73,9 @@ class FileTool {
         return text
     }
 
-    static func read(from file: String, lastRows: Int) -> String {
+    static func readDataAndEnd(from file: String, lastRows: Int) -> (String, UInt64) {
         var result = ""
+        var end = UInt64(0)
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             
@@ -87,7 +88,7 @@ class FileTool {
                 var textArray: [String]
 
                 var offset: UInt64
-                let end = fileHandle.seekToEndOfFile()
+                end = fileHandle.seekToEndOfFile()
                 var tryLineLength = UInt64(100)
                 repeat {
                     offset = UInt64(0)
@@ -119,7 +120,12 @@ class FileTool {
                 result = textArray.joined(separator: lineSeperator)
             }
         }
-        return result
+        return (result, end)
+    }
+
+    static func read(from file: String, lastRows: Int) -> String {
+        let (data, _) = readDataAndEnd(from: file, lastRows: lastRows)
+        return data
     }
 
     static func read(from file: String, beginWith offset: UInt64) -> String {
@@ -164,7 +170,7 @@ class FileTool {
                     textArray = readText.components(separatedBy: lineSeperator)
                 } while (textArray.count < 2 && offset + UInt64(tryLineLength) < end)
                 
-                result = String(data: data, encoding: .utf8)!
+                result = textArray[0]
             }
         }
         return result
