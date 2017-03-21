@@ -58,9 +58,19 @@ class StatisticsTool {
     static func distance(_ locations: [CLLocation]) -> Double {
 //        let time_start = Date()
         var d = 0.0
+        var preLocation = CLLocation()
         let secLoc = getSecondLocations(locations)
-        for i in 0...secLoc.count - 2 {
-            d = d + secLoc[i + 1].distance(from: secLoc[i])
+        for i in 0...secLoc.count - 1 {
+            if i == 0 {
+                preLocation = secLoc[i]
+            } else {
+                let curLoc = secLoc[i]
+                let deltaD = curLoc.distance(from: preLocation)
+                if deltaD >= min(curLoc.horizontalAccuracy, curLoc.verticalAccuracy, preLocation.horizontalAccuracy, preLocation.verticalAccuracy) * 0.5 {
+                    d = d + deltaD
+                    preLocation = curLoc
+                }
+            }
         }
 //        print("distance: \(d)m, \(((Date().timeIntervalSince1970 - time_start.timeIntervalSince1970) * 1000).rounded() / 1000)s, \(locations.count) locations")
         return d
