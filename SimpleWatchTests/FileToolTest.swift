@@ -33,6 +33,14 @@ class FileToolTest: XCTestCase {
         XCTAssert(getString.compare("aaaa\(ls)bbba\(ls)aacc\(ls)bbaa\(ls)bbac\(ls)aavv") == .orderedSame)
     }
 
+    func testReadTextAndEnd() {
+        var getString: String
+        var end: UInt64
+        (getString, end) = FileTool.readTextAndEnd(fileName)
+        XCTAssert(getString == "aaaa\(ls)bbba\(ls)aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
+        XCTAssert(end == 29)
+    }
+
     func testReadLastRows() {
         var getString: String
         getString = FileTool.read(from: fileName, lastRows: 3)
@@ -40,14 +48,14 @@ class FileToolTest: XCTestCase {
         getString = FileTool.read(from: fileName, lastRows: 7)
         XCTAssert(getString == "aaaa\(ls)bbba\(ls)aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
     }
-    
+
     func testReadLastRowsAndEnd() {
         var getString: String
         var end: UInt64
-        (getString, end) = FileTool.readDataAndEnd(from: fileName, lastRows: 3)
+        (getString, end) = FileTool.readTextAndEnd(from: fileName, lastRows: 3)
         XCTAssert(getString == "bbaa\(ls)bbac\(ls)aavv")
         XCTAssert(end == 29)
-        (getString, end) = FileTool.readDataAndEnd(from: fileName, lastRows: 7)
+        (getString, end) = FileTool.readTextAndEnd(from: fileName, lastRows: 7)
         XCTAssert(getString == "aaaa\(ls)bbba\(ls)aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
         XCTAssert(end == 29)
     }

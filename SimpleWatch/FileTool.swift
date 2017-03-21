@@ -60,20 +60,32 @@ class FileTool {
         appendText(text: text, to: "file.txt")
     }
 
-    static func read(_ file: String) -> String {
+    static func readTextAndEnd(_ file: String) -> (String, UInt64) {
         var text = ""
+        var end = UInt64(0)
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let path = dir.appendingPathComponent(file)
+            let url = dir.appendingPathComponent(file)
+            
             //reading
-            do {
-                text = try String(contentsOf: path, encoding: String.Encoding.utf8)
+            if let fileHandle = FileHandle(forReadingAtPath: url.path) {
+                defer {
+                    fileHandle.closeFile()
+                }
+                end = fileHandle.seekToEndOfFile()
+                do {
+                    text = try String(contentsOf: url, encoding: String.Encoding.utf8)
+                } catch {/* error handling here */}
             }
-            catch {/* error handling here */}
         }
+        return (text, end)
+    }
+    
+    static func read(_ file: String) -> String {
+        let (text, _) = readTextAndEnd(file)
         return text
     }
 
-    static func readDataAndEnd(from file: String, lastRows: Int) -> (String, UInt64) {
+    static func readTextAndEnd(from file: String, lastRows: Int) -> (String, UInt64) {
         var result = ""
         var end = UInt64(0)
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
@@ -124,7 +136,7 @@ class FileTool {
     }
 
     static func read(from file: String, lastRows: Int) -> String {
-        let (data, _) = readDataAndEnd(from: file, lastRows: lastRows)
+        let (data, _) = readTextAndEnd(from: file, lastRows: lastRows)
         return data
     }
 
