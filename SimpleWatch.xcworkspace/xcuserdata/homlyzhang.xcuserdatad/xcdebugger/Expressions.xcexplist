@@ -19,6 +19,20 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "static WatchData.getLatestLocations(date : Date, num : Int) -&gt; [CLLocation]:WatchData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "lastRows.substring(from: lastRows.index(lastRows.endIndex, offsetBy: -120))">
+            </PersistentString>
+            <PersistentString
+               value = "result.last!.timestamp.timeIntervalSince1970">
+            </PersistentString>
+            <PersistentString
+               value = "newLocations.first!.timestamp.timeIntervalSince1970">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "StatisticsTool.distance([CLLocation]) -&gt; Double:StatisticsTool.swift">
          <PersistentStrings>
             <PersistentString

@@ -106,4 +106,30 @@ class ConvertTool {
         }
         return result
     }
+
+    static func stringToLocations(fileText: String, dateStr: String) -> [CLLocation] {
+        var result = [CLLocation]()
+        var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
+        let fullFormatter = DateFormatter()
+        fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
+        
+        for i in 0...jsonStrArray.count - 1 {
+            let jsonStr = jsonStrArray[i]
+            if jsonStr.characters.count > 0 {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
+                    let dict = json as! Dictionary<String, Dictionary<String, Double>>
+                    for timeStr in dict.keys.sorted() {
+                        let dictIn = dict[timeStr]!
+                        let timestamp = fullFormatter.date(from: "\(dateStr)\(timeStr)")
+                        let location = ConvertTool.dictToLocation(dictIn, timestamp: timestamp! as NSDate)
+                        result.append(location)
+                    }
+                } catch {
+                    LogTool.log(error, #file, #function, #line)
+                }
+            }
+        }
+        return result
+    }
 }

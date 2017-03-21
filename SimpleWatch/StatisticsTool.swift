@@ -11,8 +11,6 @@ import CoreLocation
 
 class StatisticsTool {
 
-//    private distanceCache =
-
     static func getSecondLocations(_ oriLocations: [CLLocation]) -> [CLLocation] {
         var secondLocations = [CLLocation]()
         if oriLocations.count == 1 {
@@ -53,16 +51,13 @@ class StatisticsTool {
     }
 
     static func distance(_ locations: [CLLocation]) -> Double {
+//        let time_start = Date()
         var d = 0.0
         let secLoc = getSecondLocations(locations)
         for i in 0...secLoc.count - 2 {
             d = d + secLoc[i + 1].distance(from: secLoc[i])
         }
+//        print("distance: \(d)m, \(((Date().timeIntervalSince1970 - time_start.timeIntervalSince1970) * 1000).rounded() / 1000)s, \(locations.count) locations")
         return d
     }
-//
-//    static func distance(_ date: Date) -> Double {
-//        var d = 0.0
-//        return
-//    }
 }
