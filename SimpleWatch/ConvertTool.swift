@@ -37,7 +37,7 @@ class ConvertTool {
     }
 
     static func locationToDict(_ location: CLLocation) -> Dictionary<String, Double> {
-        return ["longitude": location.coordinate.longitude, "latitude": location.coordinate.latitude, "altitude": location.altitude]
+        return ["longitude": location.coordinate.longitude, "latitude": location.coordinate.latitude, "altitude": location.altitude, "horizontalAccuracy": location.horizontalAccuracy, "verticalAccuracy": location.verticalAccuracy]
     }
 
     static func locationDictToDictDict(_ locations: [NSDate : CLLocation]) -> [NSDate : Dictionary<String, Double>] {
@@ -96,7 +96,7 @@ class ConvertTool {
     }
 
     static func dictToLocation(_ dict: Dictionary<String, Double>, timestamp: NSDate) -> CLLocation {
-        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: dict["latitude"]!, longitude: dict["longitude"]!), altitude: dict["altitude"]! as CLLocationDistance, horizontalAccuracy: 0.0, verticalAccuracy: 0.0, timestamp: timestamp as Date)
+        return CLLocation(coordinate: CLLocationCoordinate2D(latitude: dict["latitude"]!, longitude: dict["longitude"]!), altitude: dict["altitude"]! as CLLocationDistance, horizontalAccuracy: dict["horizontalAccuracy"]!, verticalAccuracy: dict["verticalAccuracy"]!, timestamp: timestamp as Date)
     }
 
     static func dictArrayToLocationArray(_ dictArray: [NSDate : Dictionary<String, Double>]) -> [NSDate : CLLocation] {

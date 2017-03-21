@@ -28,6 +28,9 @@ class StatisticsTool {
                     sumDict["longitude"] = sumDict["longitude"]! / times
                     sumDict["altitude"] = sumDict["altitude"]! / times
                     sumDict["interval"] = sumDict["interval"]! / times
+                    sumDict["horizontalAccuracy"] = sumDict["horizontalAccuracy"]! / times
+                    sumDict["verticalAccuracy"] = sumDict["verticalAccuracy"]! / times
+
                     let tempNSDate = NSDate(timeIntervalSince1970: sumDict["interval"]!)
                     let tempLocation = ConvertTool.dictToLocation(sumDict, timestamp: tempNSDate)
                     secondLocations.append(tempLocation)
@@ -44,6 +47,8 @@ class StatisticsTool {
                     sumDict["longitude"] = sumDict["longitude"]! + curLoc.coordinate.longitude
                     sumDict["altitude"] = sumDict["altitude"]! + curLoc.altitude
                     sumDict["interval"] = sumDict["interval"]! + curLoc.timestamp.timeIntervalSince1970
+                    sumDict["horizontalAccuracy"] = sumDict["horizontalAccuracy"]! + curLoc.horizontalAccuracy
+                    sumDict["verticalAccuracy"] = sumDict["verticalAccuracy"]! + curLoc.verticalAccuracy
                 }
             }
         }
