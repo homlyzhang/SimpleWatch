@@ -140,8 +140,9 @@ class FileTool {
         return data
     }
 
-    static func read(from file: String, beginWith offset: UInt64) -> String {
+    static func readTextAndEnd(from file: String, beginWith offset: UInt64) -> (String, UInt64) {
         var result = ""
+        var end = UInt64(0)
         if let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
             let url = dir.appendingPathComponent(file)
             
@@ -151,11 +152,17 @@ class FileTool {
                 }
                 var data: Data
 
+                end = fileHandle.seekToEndOfFile()
                 fileHandle.seek(toFileOffset: offset)
                 data = fileHandle.readDataToEndOfFile()
                 result = String(data: data, encoding: .utf8)!
             }
         }
+        return (result, end)
+    }
+
+    static func read(from file: String, beginWith offset: UInt64) -> String {
+        let (result, _) = readTextAndEnd(from: file, beginWith: offset)
         return result
     }
     

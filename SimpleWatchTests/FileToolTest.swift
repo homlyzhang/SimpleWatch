@@ -64,6 +64,17 @@ class FileToolTest: XCTestCase {
         let getString = FileTool.read(from: fileName, beginWith: 10)
         XCTAssert(getString == "aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
     }
+    
+    func testReadFromOffsetAndEnd() {
+        var getString: String
+        var end: UInt64
+        (getString, end) = FileTool.readTextAndEnd(from: fileName, beginWith: 10)
+        XCTAssert(getString == "aacc\(ls)bbaa\(ls)bbac\(ls)aavv")
+        XCTAssert(end == 29)
+        (getString, end) = FileTool.readTextAndEnd(from: fileName, beginWith: 15)
+        XCTAssert(getString == "bbaa\(ls)bbac\(ls)aavv")
+        XCTAssert(end == 29)
+    }
 
     func testReadLineFromOffset() {
         let getString = FileTool.readLine(from: fileName, beginWith: 10)
