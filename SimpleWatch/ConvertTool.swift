@@ -132,4 +132,33 @@ class ConvertTool {
         }
         return result
     }
+    
+    static func stringToAccelerations(fileText: String, dateStr: String) -> ([CMAcceleration], Date) {
+        var result = [CMAcceleration]()
+        var lastTime = Date(timeIntervalSince1970: 0)
+        var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
+        let fullFormatter = DateFormatter()
+        fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
+        
+        for i in 0...jsonStrArray.count - 1 {
+            let jsonStr = jsonStrArray[i]
+            if jsonStr.characters.count > 0 {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
+                    let dict = json as! Dictionary<String, Dictionary<String, Double>>
+                    for timeStr in dict.keys.sorted() {
+                        let dictIn = dict[timeStr]!
+                        let acceleration = ConvertTool.dictToAcceleration(dictIn)
+                        result.append(acceleration)
+                        if i == jsonStrArray.count - 1 {
+                            lastTime = fullFormatter.date(from: "\(dateStr)\(timeStr)")!
+                        }
+                    }
+                } catch {
+                    LogTool.log(error, #file, #function, #line)
+                }
+            }
+        }
+        return (result, lastTime)
+    }
 }

@@ -8,13 +8,19 @@
 
 import Foundation
 import CoreLocation
+import CoreMotion
 
 class StatisticsTool {
 
     static func getSecondLocations(_ oriLocations: [CLLocation]) -> [CLLocation] {
         var secondLocations = [CLLocation]()
         if oriLocations.count == 1 {
-            secondLocations.append(oriLocations[0])
+            let curLoc = oriLocations[0]
+            if curLoc.horizontalAccuracy >= 0 && curLoc.verticalAccuracy >= 0 {
+                secondLocations.append(curLoc)
+            } else {
+                LogTool.log("location invalid: \(curLoc)")
+            }
         }
         if oriLocations.count > 1 {
             var startIndex = 0
@@ -43,12 +49,16 @@ class StatisticsTool {
                     }
                 } else if i < oriLocations.count {
                     let curLoc = oriLocations[i]
-                    sumDict["latitude"] = sumDict["latitude"]! + curLoc.coordinate.latitude
-                    sumDict["longitude"] = sumDict["longitude"]! + curLoc.coordinate.longitude
-                    sumDict["altitude"] = sumDict["altitude"]! + curLoc.altitude
-                    sumDict["interval"] = sumDict["interval"]! + curLoc.timestamp.timeIntervalSince1970
-                    sumDict["horizontalAccuracy"] = sumDict["horizontalAccuracy"]! + curLoc.horizontalAccuracy
-                    sumDict["verticalAccuracy"] = sumDict["verticalAccuracy"]! + curLoc.verticalAccuracy
+                    if curLoc.horizontalAccuracy >= 0 && curLoc.verticalAccuracy >= 0 {
+                        sumDict["latitude"] = sumDict["latitude"]! + curLoc.coordinate.latitude
+                        sumDict["longitude"] = sumDict["longitude"]! + curLoc.coordinate.longitude
+                        sumDict["altitude"] = sumDict["altitude"]! + curLoc.altitude
+                        sumDict["interval"] = sumDict["interval"]! + curLoc.timestamp.timeIntervalSince1970
+                        sumDict["horizontalAccuracy"] = sumDict["horizontalAccuracy"]! + curLoc.horizontalAccuracy
+                        sumDict["verticalAccuracy"] = sumDict["verticalAccuracy"]! + curLoc.verticalAccuracy
+                    } else {
+                        LogTool.log("location invalid: \(curLoc)")
+                    }
                 }
             }
         }
@@ -74,5 +84,24 @@ class StatisticsTool {
         }
 //        print("distance: \(d)m, \(((Date().timeIntervalSince1970 - time_start.timeIntervalSince1970) * 1000).rounded() / 1000)s, \(locations.count) locations")
         return d
+    }
+
+    static func pedometer(_ accelerations: [CMAcceleration]) -> (Int, Int) {
+        let time_start = Date()
+        var walkNum = 0
+        var runNum = 0
+        let walkThreshold = 1.28394
+        let runThreshold = 1.64500
+        for i in 0...accelerations.count - 1 {
+            let curAcc = accelerations[i]
+            let mag = sqrt(pow(curAcc.x, 2) + pow(curAcc.y, 2) + pow(curAcc.z, 2))
+            if mag >= walkThreshold && mag < runThreshold {
+                walkNum += 1
+            } else if mag >= runThreshold {
+                runNum += 1
+            }
+        }
+        print("walk: \(walkNum) steps, run: \(runNum) steps, \(((Date().timeIntervalSince1970 - time_start.timeIntervalSince1970) * 1000).rounded() / 1000)s, \(accelerations.count) accelerations")
+        return (walkNum, runNum)
     }
 }

@@ -19,15 +19,9 @@ class ViewController: UIViewController {
 
     // MARK: properties
 
-    @IBOutlet weak var acceX1: UILabel!
-    @IBOutlet weak var acceX2: UILabel!
-    @IBOutlet weak var acceX3: UILabel!
-    @IBOutlet weak var acceY1: UILabel!
-    @IBOutlet weak var acceY2: UILabel!
-    @IBOutlet weak var acceY3: UILabel!
-    @IBOutlet weak var acceZ1: UILabel!
-    @IBOutlet weak var acceZ2: UILabel!
-    @IBOutlet weak var acceZ3: UILabel!
+    @IBOutlet weak var accTime: UILabel!
+    @IBOutlet weak var walkSteps: UILabel!
+    @IBOutlet weak var runSteps: UILabel!
     @IBOutlet weak var roRateX1: UILabel!
     @IBOutlet weak var roRateX2: UILabel!
     @IBOutlet weak var roRateX3: UILabel!
@@ -49,6 +43,13 @@ class ViewController: UIViewController {
         FileTool.delete("\(dateStr)_location.txt")
     }
 
+    @IBAction func accResetAct(_ sender: UIButton) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyyMMdd"
+        let dateStr = dateFormatter.string(from: Date())
+        FileTool.delete("\(dateStr)_accleration.txt")
+    }
+
     override func viewDidLoad() {
         NSLog("viewDidLoad")
         super.viewDidLoad()
@@ -61,26 +62,20 @@ class ViewController: UIViewController {
         }
     }
 
-    func updateAccelerationLabels(_ accelerations: [NSDate : CMAcceleration]) {
-        var acce = CMAcceleration()
-        let count = Double(accelerations.count)
-        for (_, a) in accelerations {
-            acce.x += a.x
-            acce.y += a.y
-            acce.z += a.z
+    func updateAccelerationLabels() {
+        let latestAccelerations: [CMAcceleration]
+        let lastTime: Date
+        (latestAccelerations, lastTime) = WatchData.getLatestAccelerations(date: Date(), num: -1)
+        if latestAccelerations.count > 0 {
+            let walkNum: Int
+            let runNum: Int
+            (walkNum, runNum) = StatisticsTool.pedometer(latestAccelerations)
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            self.accTime.text = timeFormatter.string(from: lastTime)
+            self.walkSteps.text = "\(walkNum) steps"
+            self.runSteps.text = "\(runNum) steps"
         }
-        acce.x /= count
-        acce.y /= count
-        acce.z /= count
-        self.acceX3.text = self.acceX2.text!
-        self.acceX2.text = self.acceX1.text!
-        self.acceX1.text = acce.x.format(".3")
-        self.acceY3.text = self.acceY2.text!
-        self.acceY2.text = self.acceY1.text!
-        self.acceY1.text = acce.y.format(".3")
-        self.acceZ3.text = self.acceZ2.text!
-        self.acceZ2.text = self.acceZ1.text!
-        self.acceZ1.text = acce.z.format(".3")
     }
 
     func updateRotationRateLabels(_ rotationRates: [NSDate : CMRotationRate]) {
@@ -122,7 +117,7 @@ class ViewController: UIViewController {
 
     func updateLabels(_ watchData: WatchData) {
         DispatchQueue.main.async(execute: {
-            self.updateAccelerationLabels(watchData.accelerations)
+            self.updateAccelerationLabels()
             self.updateRotationRateLabels(watchData.rotationRates)
             self.updateLocationLabels()
         })
