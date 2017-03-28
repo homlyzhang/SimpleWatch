@@ -12,4 +12,8 @@ class LogTool {
     static func log(_ error: Error, _ filePath: String, _ functionName: String, _ lineNumber: Int) {
         NSLog("\(error.localizedDescription) \(NSString(string: NSString(string: filePath).lastPathComponent).deletingPathExtension) \(functionName)[\(lineNumber)]")
     }
+
+    static func log(_ logMsg: String) {
+        NSLog("\(logMsg)]")
+    }
 }
