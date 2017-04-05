@@ -37,17 +37,11 @@ class ViewController: UIViewController {
     // MARK: actions
 
     @IBAction func locResetAct(_ sender: UIButton) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let dateStr = dateFormatter.string(from: Date())
-        FileTool.delete("\(dateStr)_location.txt")
+        WatchData.clearLocations()
     }
 
     @IBAction func accResetAct(_ sender: UIButton) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
-        let dateStr = dateFormatter.string(from: Date())
-        FileTool.delete("\(dateStr)_accleration.txt")
+        WatchData.clearAccelerations()
     }
 
     override func viewDidLoad() {
@@ -69,10 +63,11 @@ class ViewController: UIViewController {
         if latestAccelerations.count > 0 {
             let walkNum: Int
             let runNum: Int
-            (walkNum, runNum) = StatisticsTool.pedometer(latestAccelerations)
+
             let timeFormatter = DateFormatter()
             timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             self.accTime.text = timeFormatter.string(from: lastTime)
+            (walkNum, runNum) = StatisticsTool.pedometer(latestAccelerations)
             self.walkSteps.text = "\(walkNum) steps"
             self.runSteps.text = "\(runNum) steps"
         }

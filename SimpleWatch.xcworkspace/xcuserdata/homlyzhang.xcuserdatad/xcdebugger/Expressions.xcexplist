@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "static ConvertTool.stringToAccelerations(fileText : String, dateStr : String) -&gt; ([CMAcceleration], Date):ConvertTool.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "i == 1">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "ViewController.updateLabels(WatchData) -&gt; ():ViewController.swift">
          <PersistentStrings>
             <PersistentString
@@ -11,24 +19,24 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "StatisticsTool.getSecondLocations([CLLocation]) -&gt; [CLLocation]:StatisticsTool.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "curLoc.timestamp">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "static WatchData.getLatestLocations(date : Date, num : Int) -&gt; [CLLocation]:WatchData.swift">
          <PersistentStrings>
+            <PersistentString
+               value = "newLocations.first!.timestamp.timeIntervalSince1970">
+            </PersistentString>
             <PersistentString
                value = "lastRows.substring(from: lastRows.index(lastRows.endIndex, offsetBy: -120))">
             </PersistentString>
             <PersistentString
                value = "result.last!.timestamp.timeIntervalSince1970">
             </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "StatisticsTool.getSecondLocations([CLLocation]) -&gt; [CLLocation]:StatisticsTool.swift">
+         <PersistentStrings>
             <PersistentString
-               value = "newLocations.first!.timestamp.timeIntervalSince1970">
+               value = "curLoc.timestamp">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

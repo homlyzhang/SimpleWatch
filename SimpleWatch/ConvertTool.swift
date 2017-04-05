@@ -136,6 +136,7 @@ class ConvertTool {
     static func stringToAccelerations(fileText: String, dateStr: String) -> ([CMAcceleration], Date) {
         var result = [CMAcceleration]()
         var lastTime = Date(timeIntervalSince1970: 0)
+        var lastTimeStr = ""
         var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
         let fullFormatter = DateFormatter()
         fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
@@ -150,14 +151,16 @@ class ConvertTool {
                         let dictIn = dict[timeStr]!
                         let acceleration = ConvertTool.dictToAcceleration(dictIn)
                         result.append(acceleration)
-                        if i == jsonStrArray.count - 1 {
-                            lastTime = fullFormatter.date(from: "\(dateStr)\(timeStr)")!
-                        }
+                        lastTimeStr = timeStr
                     }
                 } catch {
                     LogTool.log(error, #file, #function, #line)
                 }
             }
+        }
+
+        if lastTimeStr != "" {
+            lastTime = fullFormatter.date(from: "\(dateStr)\(lastTimeStr)")!
         }
         return (result, lastTime)
     }

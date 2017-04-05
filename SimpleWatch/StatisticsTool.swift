@@ -86,12 +86,10 @@ class StatisticsTool {
         return d
     }
 
-    static func pedometer(_ accelerations: [CMAcceleration]) -> (Int, Int) {
+    static func pedometer(_ accelerations: [CMAcceleration], walkThreshold: Double, runThreshold: Double) -> (Int, Int) {
         let time_start = Date()
         var walkNum = 0
         var runNum = 0
-        let walkThreshold = 1.28394
-        let runThreshold = 1.64500
         for i in 0...accelerations.count - 1 {
             let curAcc = accelerations[i]
             let mag = sqrt(pow(curAcc.x, 2) + pow(curAcc.y, 2) + pow(curAcc.z, 2))
@@ -103,5 +101,9 @@ class StatisticsTool {
         }
         print("walk: \(walkNum) steps, run: \(runNum) steps, \(((Date().timeIntervalSince1970 - time_start.timeIntervalSince1970) * 1000).rounded() / 1000)s, \(accelerations.count) accelerations")
         return (walkNum, runNum)
+    }
+
+    static func pedometer(_ accelerations: [CMAcceleration]) -> (Int, Int) {
+        return pedometer(accelerations, walkThreshold: 1.28394, runThreshold: 1.64500)
     }
 }

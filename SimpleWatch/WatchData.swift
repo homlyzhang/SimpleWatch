@@ -17,6 +17,8 @@ class WatchData {
 
     static private var locationCache = LocationCacheClass()
     static private var accelerationCache = AccelerationCacheClass()
+    static private let locationFileSuffix = "_location.txt"
+    static private let accelerationFileSuffix = "_acceleration.txt"
 
     public init() {}
     public init(_ data: [String : Any]) {
@@ -35,8 +37,7 @@ class WatchData {
         var data = Data()
         let returnData = FileTool.lineSeperator.data(using: .utf8)!
         var dateStr = "", timeStr = ""
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMddHHmmssSSS"
+        let formatter = DateTool.getMillSecFormat()
 
         let dateDictArray = dictArray as [Date: Dictionary<String, Double>]
         for time in dateDictArray.keys.sorted() {
@@ -67,14 +68,21 @@ class WatchData {
         }
     }
 
+    static func clearLocations() {
+        let dateFormatter = DateTool.getDateFormat()
+        let dateStr = dateFormatter.string(from: Date())
+        FileTool.delete("\(dateStr)\(locationFileSuffix)")
+
+        locationCache = LocationCacheClass()
+    }
+
     static func getLatestLocations(date: Date, num: Int) -> [CLLocation] {
 //        let time_start = Date()
         var result: [CLLocation]
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
+        let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: date)
         let lastRows: String
-        let fileName = dateStr + "_location.txt"
+        let fileName = "\(dateStr)\(locationFileSuffix)"
 
         if num >= 0 {
             lastRows = FileTool.read(from: fileName, lastRows: num)
@@ -103,15 +111,22 @@ class WatchData {
         return result
     }
 
+    static func clearAccelerations() {
+        let dateFormatter = DateTool.getDateFormat()
+        let dateStr = dateFormatter.string(from: Date())
+        FileTool.delete("\(dateStr)\(accelerationFileSuffix)")
+
+        accelerationCache = AccelerationCacheClass()
+    }
+
     static func getLatestAccelerations(date: Date, num: Int) -> ([CMAcceleration], Date) {
         let time_start = Date()
         var result: [CMAcceleration]
         var lastDate: Date
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd"
+        let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: date)
         let lastRows: String
-        let fileName = dateStr + "_acceleration.txt"
+        let fileName = "\(dateStr)\(accelerationFileSuffix)"
         
         if num >= 0 {
             lastRows = FileTool.read(from: fileName, lastRows: num)
