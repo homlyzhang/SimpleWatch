@@ -107,7 +107,7 @@ class ConvertTool {
         return result
     }
 
-    static func stringToLocations(fileText: String, dateStr: String) -> [CLLocation] {
+    static func stringToLocations(fileText: String, dateStr: String, accuracyThreshold: Double = 100) -> [CLLocation] {
         var result = [CLLocation]()
         var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
         let fullFormatter = DateFormatter()
@@ -123,7 +123,11 @@ class ConvertTool {
                         let dictIn = dict[timeStr]!
                         let timestamp = fullFormatter.date(from: "\(dateStr)\(timeStr)")
                         let location = ConvertTool.dictToLocation(dictIn, timestamp: timestamp! as NSDate)
-                        result.append(location)
+                        if location.horizontalAccuracy >= 0 && location.verticalAccuracy >= 0 && location.horizontalAccuracy <= accuracyThreshold && location.verticalAccuracy <= accuracyThreshold {
+                            result.append(location)
+                        } else {
+                            LogTool.log("location invalid: \(location)")
+                        }
                     }
                 } catch {
                     LogTool.log(error, #file, #function, #line)
