@@ -11,17 +11,25 @@ import CoreMotion
 import CoreLocation
 
 class WatchData {
+    var userAccelerations = [NSDate : CMAcceleration]()
     var accelerations = [NSDate : CMAcceleration]()
     var rotationRates = [NSDate : CMRotationRate]()
     var locations = [NSDate : CLLocation]()
 
     static private var locationCache = LocationCacheClass()
     static private var accelerationCache = AccelerationCacheClass()
-    static private let locationFileSuffix = "_location.txt"
-    static private let accelerationFileSuffix = "_acceleration.txt"
+    static private let fileSuffix = [
+        "userAcceleration": "_userAcceleration.txt",
+        "acceleration": "_acceleration.txt",
+        "rotationRate": "_rotationRate.txt",
+        "location": "_location.txt"
+    ]
 
     public init() {}
     public init(_ data: [String : Any]) {
+        if data["userAcceleration"] != nil {
+            self.userAccelerations = ConvertTool.dictArrayToAccelerationArray(data["userAcceleration"] as! [NSDate: Dictionary<String, Double>])
+        }
         if data["acceleration"] != nil {
             self.accelerations = ConvertTool.dictArrayToAccelerationArray(data["acceleration"] as! [NSDate: Dictionary<String, Double>])
         }
@@ -62,16 +70,16 @@ class WatchData {
     }
 
     func appendToFile() {
-        let message = ConvertTool.makeSendMessage(accelerations: self.accelerations, rotationRates: self.rotationRates, locations: self.locations)
-        for property in ["acceleration", "rotationRate", "location"] {
-            appendToFile(message[property] as! [NSDate : Dictionary<String, Double>], fileSuffix: "_" + property + ".txt")
+        let message = ConvertTool.makeSendMessage(userAccelerations: self.userAccelerations, accelerations: self.accelerations, rotationRates: self.rotationRates, locations: self.locations)
+        for property in ["userAcceleration", "acceleration", "rotationRate", "location"] {
+            appendToFile(message[property] as! [NSDate : Dictionary<String, Double>], fileSuffix: WatchData.fileSuffix[property]!)
         }
     }
 
     static func clearLocations() {
         let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: Date())
-        FileTool.delete("\(dateStr)\(locationFileSuffix)")
+        FileTool.delete("\(dateStr)\(fileSuffix["location"]!)")
 
         locationCache = LocationCacheClass()
     }
@@ -82,7 +90,7 @@ class WatchData {
         let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: date)
         let lastRows: String
-        let fileName = "\(dateStr)\(locationFileSuffix)"
+        let fileName = "\(dateStr)\(fileSuffix["location"]!)"
 
         if num >= 0 {
             lastRows = FileTool.read(from: fileName, lastRows: num)
@@ -114,7 +122,7 @@ class WatchData {
     static func clearAccelerations() {
         let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: Date())
-        FileTool.delete("\(dateStr)\(accelerationFileSuffix)")
+        FileTool.delete("\(dateStr)\(fileSuffix["acceleration"]!)")
 
         accelerationCache = AccelerationCacheClass()
     }
@@ -126,7 +134,7 @@ class WatchData {
         let dateFormatter = DateTool.getDateFormat()
         let dateStr = dateFormatter.string(from: date)
         let lastRows: String
-        let fileName = "\(dateStr)\(accelerationFileSuffix)"
+        let fileName = "\(dateStr)\(fileSuffix["acceleration"]!)"
         
         if num >= 0 {
             lastRows = FileTool.read(from: fileName, lastRows: num)

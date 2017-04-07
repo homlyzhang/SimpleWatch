@@ -48,23 +48,33 @@ class ConvertTool {
         return result
     }
 
-    static func makeSendMessage(accelerations: [NSDate : CMAcceleration], rotationRates: [NSDate : CMRotationRate], locations: [NSDate : CLLocation]) -> [String : Any] {
+    static func makeSendMessage(userAccelerations: [NSDate : CMAcceleration], accelerations: [NSDate : CMAcceleration], rotationRates: [NSDate : CMRotationRate], locations: [NSDate : CLLocation]) -> [String : Any] {
         var message = [String : Any]()
+        if userAccelerations.count > 0 {
+            message["userAcceleration"] = accelerationDictToDictDict(userAccelerations)
+        }
         message["acceleration"] = accelerationDictToDictDict(accelerations)
         message["rotationRate"] = rotationRateDictToDictDict(rotationRates)
         message["location"] = locationDictToDictDict(locations)
         return message
     }
 
+    static func makeSendMessage(accelerations: [NSDate : CMAcceleration], rotationRates: [NSDate : CMRotationRate], locations: [NSDate : CLLocation]) -> [String : Any] {
+        return makeSendMessage(userAccelerations: [NSDate : CMAcceleration](), accelerations: accelerations, rotationRates: rotationRates, locations: locations)
+    }
+
     static func makeSendMessage(deviceMotions: [NSDate : CMDeviceMotion], locations: [NSDate : CLLocation]) -> [String : Any] {
         var message = [String : Any]()
         var accelerationDict = [NSDate : Dictionary<String, Double>]()
+        var userAccelerationDict = [NSDate : Dictionary<String, Double>]()
         var rotationRateDict = [NSDate : Dictionary<String, Double>]()
         for (time, motion) in deviceMotions {
+            userAccelerationDict[time] = accelerationToDict(motion.userAcceleration)
             let totalAcceleration = CMAcceleration(x: motion.gravity.x + motion.userAcceleration.x, y: motion.gravity.y + motion.userAcceleration.y, z: motion.gravity.z + motion.userAcceleration.z)
             accelerationDict[time] = accelerationToDict(totalAcceleration)
             rotationRateDict[time] = rotationRateToDict(motion.rotationRate)
         }
+        message["userAcceleration"] = userAccelerationDict
         message["acceleration"] = accelerationDict
         message["rotationRate"] = rotationRateDict
         message["location"] = locationDictToDictDict(locations)
