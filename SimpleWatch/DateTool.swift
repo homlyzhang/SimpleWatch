@@ -21,4 +21,10 @@ class DateTool {
         formatter.dateFormat = "yyyyMMddHHmmssSSS"
         return formatter
     }
+
+    static func getSecondFullFormat() -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter
+    }
 }

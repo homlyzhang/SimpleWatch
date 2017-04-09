@@ -117,6 +117,43 @@ class ConvertTool {
         return result
     }
 
+    static func stringToAccelerationsAndTime(fileText: String, dateStr: String) -> ([CMAcceleration], [Date], Date) {
+        var result = [CMAcceleration]()
+        var timeResult = [Date]()
+        var lastTime = Date(timeIntervalSince1970: 0)
+        var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
+        let fullFormatter = DateFormatter()
+        fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
+        
+        for i in 0...jsonStrArray.count - 1 {
+            let jsonStr = jsonStrArray[i]
+            if jsonStr.characters.count > 0 {
+                do {
+                    let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
+                    let dict = json as! Dictionary<String, Dictionary<String, Double>>
+                    for timeStr in dict.keys.sorted() {
+                        let dictIn = dict[timeStr]!
+                        let acceleration = ConvertTool.dictToAcceleration(dictIn)
+                        result.append(acceleration)
+                        let time = fullFormatter.date(from: "\(dateStr)\(timeStr)")!
+                        timeResult.append(time)
+                        lastTime = time
+                    }
+                } catch {
+                    LogTool.log(error, #file, #function, #line)
+                }
+            }
+        }
+        return (result, timeResult, lastTime)
+    }
+
+    static func stringToAccelerations(fileText: String, dateStr: String) -> ([CMAcceleration], Date) {
+        let result: [CMAcceleration]
+        let lastTime: Date
+        (result, _, lastTime) = stringToAccelerationsAndTime(fileText: fileText, dateStr: dateStr)
+        return (result, lastTime)
+    }
+
     static func stringToLocations(fileText: String, dateStr: String, accuracyThreshold: Double = 100) -> [CLLocation] {
         var result = [CLLocation]()
         var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
@@ -145,37 +182,5 @@ class ConvertTool {
             }
         }
         return result
-    }
-    
-    static func stringToAccelerations(fileText: String, dateStr: String) -> ([CMAcceleration], Date) {
-        var result = [CMAcceleration]()
-        var lastTime = Date(timeIntervalSince1970: 0)
-        var lastTimeStr = ""
-        var jsonStrArray = fileText.components(separatedBy: FileTool.lineSeperator)
-        let fullFormatter = DateFormatter()
-        fullFormatter.dateFormat = "yyyyMMddHHmmssSSS"
-        
-        for i in 0...jsonStrArray.count - 1 {
-            let jsonStr = jsonStrArray[i]
-            if jsonStr.characters.count > 0 {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: jsonStr.data(using: .utf8)!, options: [])
-                    let dict = json as! Dictionary<String, Dictionary<String, Double>>
-                    for timeStr in dict.keys.sorted() {
-                        let dictIn = dict[timeStr]!
-                        let acceleration = ConvertTool.dictToAcceleration(dictIn)
-                        result.append(acceleration)
-                        lastTimeStr = timeStr
-                    }
-                } catch {
-                    LogTool.log(error, #file, #function, #line)
-                }
-            }
-        }
-
-        if lastTimeStr != "" {
-            lastTime = fullFormatter.date(from: "\(dateStr)\(lastTimeStr)")!
-        }
-        return (result, lastTime)
     }
 }

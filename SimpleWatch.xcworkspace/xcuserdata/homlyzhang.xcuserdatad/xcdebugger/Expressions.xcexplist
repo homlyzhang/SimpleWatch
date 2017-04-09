@@ -3,6 +3,14 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "static WatchData.getLatestVelocity(num : Int) -&gt; [Velocity]:WatchData.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "velocityCache">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "static ConvertTool.stringToAccelerations(fileText : String, dateStr : String) -&gt; ([CMAcceleration], Date):ConvertTool.swift">
          <PersistentStrings>
             <PersistentString
@@ -22,13 +30,13 @@
          contextName = "static WatchData.getLatestLocations(date : Date, num : Int) -&gt; [CLLocation]:WatchData.swift">
          <PersistentStrings>
             <PersistentString
-               value = "newLocations.first!.timestamp.timeIntervalSince1970">
+               value = "result.last!.timestamp.timeIntervalSince1970">
             </PersistentString>
             <PersistentString
                value = "lastRows.substring(from: lastRows.index(lastRows.endIndex, offsetBy: -120))">
             </PersistentString>
             <PersistentString
-               value = "result.last!.timestamp.timeIntervalSince1970">
+               value = "newLocations.first!.timestamp.timeIntervalSince1970">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

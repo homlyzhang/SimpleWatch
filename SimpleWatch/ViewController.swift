@@ -22,6 +22,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var accTime: UILabel!
     @IBOutlet weak var walkSteps: UILabel!
     @IBOutlet weak var runSteps: UILabel!
+    @IBOutlet weak var speed: UILabel!
     @IBOutlet weak var roRateX1: UILabel!
     @IBOutlet weak var roRateX2: UILabel!
     @IBOutlet weak var roRateX3: UILabel!
@@ -44,6 +45,10 @@ class ViewController: UIViewController {
         WatchData.clearAccelerations()
     }
 
+    @IBAction func velResetAct(_ sender: UIButton) {
+        WatchData.clearVelocity()
+    }
+
     override func viewDidLoad() {
         NSLog("viewDidLoad")
         super.viewDidLoad()
@@ -59,18 +64,25 @@ class ViewController: UIViewController {
     func updateAccelerationLabels() {
         let latestAccelerations: [CMAcceleration]
         let lastTime: Date
+
         (latestAccelerations, lastTime) = WatchData.getLatestAccelerations(date: Date(), num: -1)
         if latestAccelerations.count > 0 {
             let walkNum: Int
             let runNum: Int
+            let latestVelocity: [Velocity]
+            let timeFormatter = DateTool.getSecondFullFormat()
 
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             self.accTime.text = timeFormatter.string(from: lastTime)
             (walkNum, runNum) = StatisticsTool.pedometer(latestAccelerations)
             self.walkSteps.text = "\(walkNum) steps"
             self.runSteps.text = "\(runNum) steps"
+
+            latestVelocity = WatchData.getLatestVelocity(num: 1)
+            if latestVelocity.count > 0 {
+                self.speed.text = "\((latestVelocity.last!.magnitude() * 100).rounded() / 100) m/s"
+            }
         }
+
     }
 
     func updateRotationRateLabels(_ rotationRates: [NSDate : CMRotationRate]) {
@@ -99,8 +111,7 @@ class ViewController: UIViewController {
         let latestLocations = WatchData.getLatestLocations(date: Date(), num: -1)
         if latestLocations.count > 0 {
             let distance = StatisticsTool.distance(latestLocations)
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let timeFormatter = DateTool.getSecondFullFormat()
             self.locTime.text = timeFormatter.string(from: latestLocations.last!.timestamp)
             if distance < 10000 {
                 self.locDistance.text = "\((distance * 1000).rounded() / 1000) m"
